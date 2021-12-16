@@ -12,7 +12,7 @@
   "unpkg": "dist/stencil-with-semantic-release/stencil-with-semantic-release.esm.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ionic-team/stencil-component-starter.git"
+    "url": "https://github.com/matzar/stencil-with-semantic-release.git"
   },
   "files": [
     "dist/",
