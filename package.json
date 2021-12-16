@@ -14,6 +14,10 @@
     "type": "git",
     "url": "https://github.com/matzar/stencil-with-semantic-release.git"
   },
+  "author": {
+    "name": "Mateusz Zaremba",
+    "email": "mat.zar@icloud.com"
+  },
   "files": [
     "dist/",
     "loader/"
