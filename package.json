@@ -22,6 +22,11 @@
     "dist/",
     "loader/"
   ],
+  "keywords": [
+    "stencil",
+    "semantic-release",
+    "example"
+  ],
   "scripts": {
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
