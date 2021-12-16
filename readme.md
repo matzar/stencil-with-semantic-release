@@ -1,75 +1,65 @@
 ![Built With Stencil](https://img.shields.io/badge/-Built%20With%20Stencil-16161d.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI%2BCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI%2BCgkuc3Qwe2ZpbGw6I0ZGRkZGRjt9Cjwvc3R5bGU%2BCjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00MjQuNywzNzMuOWMwLDM3LjYtNTUuMSw2OC42LTkyLjcsNjguNkgxODAuNGMtMzcuOSwwLTkyLjctMzAuNy05Mi43LTY4LjZ2LTMuNmgzMzYuOVYzNzMuOXoiLz4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTQyNC43LDI5Mi4xSDE4MC40Yy0zNy42LDAtOTIuNy0zMS05Mi43LTY4LjZ2LTMuNkgzMzJjMzcuNiwwLDkyLjcsMzEsOTIuNyw2OC42VjI5Mi4xeiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDI0LjcsMTQxLjdIODcuN3YtMy42YzAtMzcuNiw1NC44LTY4LjYsOTIuNy02OC42SDMzMmMzNy45LDAsOTIuNywzMC43LDkyLjcsNjguNlYxNDEuN3oiLz4KPC9zdmc%2BCg%3D%3D&colorA=16161d&style=flat-square)
 
-# Stencil Component Starter
+# How to set up semantic-relese with Stencil
+## Set up `NPM_TOKEN`
+Go to your repository's `Settings` -> `Secrets` -> `New repository secret`. 
+In the `Name` field put `NPM_TOKEN`. Then in the `Value` past your npm token.
 
-This is a starter project for building a standalone Web Component using Stencil.
 
-Stencil is also great for building entire apps. For that, use the [stencil-app-starter](https://github.com/ionic-team/stencil-app-starter) instead.
+## Set up `GitHub Actions`
+Go to your repository's `Actions` tab and press `set up a workflow yourself`:
 
-# Stencil
+<img width="1177" alt="image" src="https://user-images.githubusercontent.com/15261018/146361996-6561154d-70b9-4943-a7cf-644da3b57a4f.png">
 
-Stencil is a compiler for building fast web apps using Web Components.
+Then copy and paste the below workflow set up
 
-Stencil combines the best concepts of the most popular frontend frameworks into a compile-time rather than run-time tool.  Stencil takes TypeScript, JSX, a tiny virtual DOM layer, efficient one-way data binding, an asynchronous rendering pipeline (similar to React Fiber), and lazy-loading out of the box, and generates 100% standards-based Web Components that run in any browser supporting the Custom Elements v1 spec.
+```yml
+name: Release
+'on':
+  push:
+    branches:
+      - master
+      - next
+      - beta
+      - '*.x'
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          cache: npm
+          node-version: 16
+      - run: npm ci
+      - run: npm run test
+      - run: npm run build
+      - run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-Stencil components are just Web Components, so they work in any major framework or with no framework at all.
-
-## Getting Started
-
-To start building a new web component using Stencil, clone this repo to a new directory:
-
-```bash
-git clone https://github.com/ionic-team/stencil-component-starter.git my-component
-cd my-component
-git remote rm origin
 ```
+Press `Start commit` button to commit. 
 
-and run:
+And you're done! Next time you want to release a new version of your Stencil component, prefix your commit with `feat(desc):` or just `feat:` and a new minor version will be semanticly-released. 
 
-```bash
-npm install
-npm start
-```
+If you want to release a fix, prefix your commit with `fix(desc):` or `fix:` and a fix to your Stencil component will be semanticly-released. 
 
-To build the component for production, run:
+`GITHUB_TOKEN` is a [default environment variable](https://docs.github.com/en/actions/learn-github-actions/environment-variables) and is going to be grabbed automatically so no need to set it up (apart from generating it in the first place). If you don't have your `NPM_TOKEN` and `GITHUB_TOKEN` yet, look below for a quick tutorial on how to generate them.
 
-```bash
-npm run build
-```
+# Generate `NPM_TOKEN`
+ 
+You can find out how to generate `NPM_TOKEN` [here](https://docs.npmjs.com/creating-and-viewing-access-tokens). Tip: for GitHub Actions you need to generate `Automation` token.
 
-To run the unit tests for the components, run:
+# Generate `GITHUB_TOKEN`
+Go to your GitHub profile `Settings` -> `Developer settings` -> `Personal access tokens` and click `Generate new token` button. 
 
-```bash
-npm test
-```
+<img width="1219" alt="image" src="https://user-images.githubusercontent.com/15261018/146362633-beb85809-d0fc-4c37-b803-3e515871182e.png">
 
-Need help? Check out our docs [here](https://stenciljs.com/docs/my-first-component).
+Give it some name in the `Note` field (I chose `semantic-release-token`) and tick everything in the  `repo` field (that's the only field you'll need).
 
+<img width="1230" alt="image" src="https://user-images.githubusercontent.com/15261018/146362945-b58adf2f-7294-4e9a-87cd-78286ad9430c.png">
 
-## Naming Components
-
-When creating new component tags, we recommend _not_ using `stencil` in the component name (ex: `<stencil-datepicker>`). This is because the generated component has little to nothing to do with Stencil; it's just a web component!
-
-Instead, use a prefix that fits your company or any name for a group of related components. For example, all of the Ionic generated web components use the prefix `ion`.
-
-
-## Using this component
-
-There are three strategies we recommend for using web components built with Stencil.
-
-The first step for all three of these strategies is to [publish to NPM](https://docs.npmjs.com/getting-started/publishing-npm-packages).
-
-### Script tag
-
-- Put a script tag similar to this `<script type='module' src='https://unpkg.com/my-component@0.0.1/dist/my-component.esm.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### Node Modules
-- Run `npm install my-component --save`
-- Put a script tag similar to this `<script type='module' src='node_modules/my-component/dist/my-component.esm.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### In a stencil-starter app
-- Run `npm install my-component --save`
-- Add an import to the npm packages `import my-component;`
-- Then you can use the element anywhere in your template, JSX, html etc
+then press `Generate token` button. You'll be presented with your token. Save it in a safe place.
